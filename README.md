@@ -6,3 +6,4 @@ A minimalist yet huge jacket for [Simplify](http://mmth.us/simplify/). Due to th
 
 If you'd like to hack around with this, see the [documentation on Github](https://github.com/mmth/simplify_jackets). Feel free to submit a pull request if you do something awesome. Or kind of awesome. Or a bugfix...
 
+<iframe width="560" height="315" src="http://www.youtube.com/embed/mgs-8OiYD8I" frameborder="0" allowfullscreen></iframe>
