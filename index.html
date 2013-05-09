@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en" xml:lang="en">
+	<head>
+		<meta name="jacket.title" content="Sidecar" />
+		<meta name="jacket.author" content="Brett Terpstra" />
+		<meta name="jacket.url" content="http://brettterpstra.com" />
+		<meta name="jacket.version" content="1.3" />
+		<meta name="jacket.bounds" content="300x1440" />
+		<meta name="jacket.variations" content="I have the blues so bad, It's not easy being green, White riot, Black power" />
+		<meta name="jacket.settings" content="!can_handle_track_title_visibility, !can_handle_cover_visibility" />
+
+		<link rel="stylesheet" type="text/css" href="index.css"  />
+		<script type="text/javascript">
+
+		//Draws circle with specified radius
+
+
+		//When user changes jacket to yours, or Simplify starts with your jacket this event arrives
+		Simplify.listenEvent(PMEvents.Ready, function(initial_state)
+		{
+			//This template jacket will fade in because of this line
+			$("body").animate({"opacity": ".95"},2000);
+
+			// if (Simplify.playerState() == PMPlayerState.Stopped)
+			// {
+			// 	$('.progress span').css({top:"100%"});
+			// }
+			// else
+			// {
+			// 	$('.progress span').css({top:0});
+			// }
+			$('.progress span').css({top:"100%"});
+
+			var updateProgress = function()
+			{
+				if (Simplify.playerState() == PMPlayerState.Playing || Simplify.playerState() == PMPlayerState.Paused)
+				{
+					Simplify.getTrackPlayedAmount(function(value)
+					{
+
+						$('.progress span').css({top:value*100 + "%"});
+					});
+				}
+
+			}
+
+			updateProgress(), setInterval(updateProgress, 1000);
+		});
+
+		//When variation changes, you can add/remove CSS-classes from body to keep track current variation
+		Simplify.listenEvent(PMEvents.VariationChange, function(variation)
+		{
+			/* EXAMPLE CODE. IT WORKS! */
+
+			if (variation.indexOf("I have the blues so bad") != -1)
+			{
+				$("body").addClass("blue");
+			}
+			else
+			{
+				$("body").removeClass("blue");
+			}
+
+			if (variation.indexOf("It's not easy being green") != -1)
+			{
+				$("body").addClass("green");
+			}
+			else
+			{
+				$("body").removeClass("green");
+			}
+
+			if (variation.indexOf("White riot") != -1)
+			{
+				$("body").addClass("white");
+			}
+			else
+			{
+				$("body").removeClass("white");
+			}
+
+			if (variation.indexOf("Black power") != -1)
+			{
+				$("body").addClass("black");
+			}
+			else
+			{
+				$("body").removeClass("black");
+			}
+
+		});
+
+		//UI modifications on playback changes
+		Simplify.listenEvent(PMEvents.PlaybackStateChange, function(state)
+		{
+			if (state == PMPlayerState.Paused)
+			{
+				$('.progress').addClass('paused');
+			}
+			else if (state == PMPlayerState.Playing)
+			{
+				$('.progress').removeClass('paused');
+			}
+			else
+			{
+				$('.progress').removeClass('paused');
+			}
+		});
+
+		//Track title arrived from Simplify
+		Simplify.listenEvent(PMEvents.TrackInformationChange, function(artist, title, album)
+		{
+			//Undefined attributes means stopped playback.
+			if (artist != undefined && title != undefined)
+			{
+				$(".title,.artist").fadeOut('fast',function() {
+					$(".title").text(title);
+					$(".artist").text(artist+" ");
+					$(this).fadeIn('fast');
+				})
+
+				$('.progress span').css({top:0});
+			}
+			else
+			{
+				$(".title").text("I can haz beats?");
+				$(".artist").html("&nbsp;");
+			}
+		});
+
+		//Cover image arrives from Simplify!
+		Simplify.listenEvent(PMEvents.CoverChange, function(cover)
+		{
+			if (cover == undefined)
+			{
+				return;
+			}
+		});
+
+		//You can show controls over here, modify UI and so forth
+		Simplify.listenEvent(PMEvents.InactiveMouseEnter, function()
+		{
+
+		});
+
+		Simplify.listenEvent(PMEvents.InactiveMouseExit, function()
+		{
+
+		});
+
+		$(window).click(function(){
+			Simplify.togglePlayback();
+		})
+		</script>
+	</head>
+	<body>
+		<div class="progress">
+			<span></span>
+		</div>
+		<div class="jacket">
+			<p><strong class="artist"> </strong> <span class="title">I can haz beats?</span></p>
+		</div>
+	</body>
+</html>
