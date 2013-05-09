@@ -5,10 +5,13 @@ html, body
 {
 	margin: 0;
 	padding: 0;
-	background: rgba(14, 13, 16, .15);
 	color: #fff;
 	opacity: 1;
 	cursor: default;
+}
+
+body {
+	background: rgba(14, 13, 16, .15);
 }
 
 /* Delete the declaration below if you don't want to fade in jacket */
@@ -70,6 +73,7 @@ body
 .jacket
 {
 	position:absolute;
+	z-index: 10;
 	width: 270px;
 	height: 1390px;
 	background: transparent;
@@ -127,3 +131,8 @@ body
 .white { background: rgba(255,255,255,.15); color: black; }
 .white .jacket .artist { background: rgba(0,0,0,.1); }
 .white .jacket > p { color: rgba(0,0,0,.5); }
+
+.invisible { background: rgba(0,0,0,.1); }
+.invisible .progress span { background: rgba(0,0,0,.1);}
+.invisible .jacket .artist { background: rgba(0,0,0,.1); }
+.invisible .jacket > p { color: rgba(255,255,255,.3); }
