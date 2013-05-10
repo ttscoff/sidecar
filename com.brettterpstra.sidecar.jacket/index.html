@@ -6,13 +6,30 @@
 		<meta name="jacket.url" content="http://brettterpstra.com" />
 		<meta name="jacket.version" content="1.5" />
 		<meta name="jacket.bounds" content="298x1418" />
-		<meta name="jacket.variations" content="I have the blues so bad, It's not easy being green, White riot, Black power, Almost invisible, Blowout, Can you hear me Major Tom?" />
+		<meta name="jacket.variations" content="Snozzberry, Easy being green, Absence of dark, Obsidious, Wallflower, Nightfall, Oddity, Superfuzz Bigmuff" />
 
 
 		<link rel="stylesheet" type="text/css" href="index.css"  />
 		<script type="text/javascript">
 
 		var timer;
+
+		// test if current theme is blurred
+		// add new blurred themes to blurredThemes array as an array of class and foreground color
+		function isBlurred() {
+			var blurredThemes = [
+				["blowout", "rgba(255, 222, 41, .2)"],
+				["fadeaway", "rgba(0, 154, 228, .2)"],
+				["fuzz", "rgba(255,255,255,.2)"]
+			], i = 0;
+
+			for (i;i<blurredThemes.length;i++) {
+				if ($("body").hasClass(blurredThemes[i][0])) {
+					return blurredThemes[i][1];
+				}
+			}
+			return false;
+		}
 
 		//When user changes jacket to yours, or Simplify starts with your jacket this event arrives
 		Simplify.listenEvent(PMEvents.Ready, function(initial_state)
@@ -36,17 +53,37 @@
 				{
 					Simplify.getTrackPlayedAmount(function(value)
 					{
+						// Progress bar height
 						$('.progress span').css({top:(Math.round(value*100/0.01)*0.01).toString() + "%"});
-						if ($('body').hasClass('blowout') || $('body').hasClass('fadeaway')) {
-							$('.progress span').css({'-webkit-filter': 'blur('+((value*105)+30)+'px)'});
+
+						// For blurred themes
+						var fgColor = isBlurred();
+						if (!fgColor === false) {
+							// blur amount
+							blurValue = ((value*105)+30);
+							// shadow length/blur
+							shadowValue = (((Math.round((value*100)*10)/10)*3)-20);
+							shadowValue2 = ((Math.round(shadowValue)/1.5)-15);
+							shadowValue3 = ((Math.round(shadowValue2)/2)+15);
+							shadowValue = shadowValue < 0 ? 0 : shadowValue;
+							shadowValue2 = shadowValue2 < 0 ? 0 : shadowValue2;
+							shadowValue3 = shadowValue3 < 0 ? 0 : shadowValue3;
+							$('.progress span').css({
+								'-webkit-filter': 'blur('+blurValue+'px)',
+								'box-shadow': "0 -"+shadowValue2.toString()+"px "+shadowValue2.toString()+"px "+fgColor+", 0 -"+shadowValue3.toString()+"px 20px "+fgColor
+							});
 						} else {
-							$('.progress span').css({'-webkit-filter': 'blur(0)'});
+							$('.progress span').css({
+								'-webkit-filter': 'blur(0)',
+								'box-shadow': "none"
+							});
 						}
 					});
 				}
 			}
 
-			updateProgress(), setInterval(updateProgress, 1000);
+			updateProgress();
+			setInterval(updateProgress, 1000);
 
 			$(".jacket").click(function(ev){
 				ev.preventDefault();
@@ -72,7 +109,7 @@
 		{
 			/* EXAMPLE CODE. IT WORKS! */
 
-			if (variation.indexOf("I have the blues so bad") != -1)
+			if (variation.indexOf("Snozzberry") != -1)
 			{
 				$("body").addClass("blue");
 			}
@@ -81,7 +118,7 @@
 				$("body").removeClass("blue");
 			}
 
-			if (variation.indexOf("It's not easy being green") != -1)
+			if (variation.indexOf("Easy being green") != -1)
 			{
 				$("body").addClass("green");
 			}
@@ -90,7 +127,7 @@
 				$("body").removeClass("green");
 			}
 
-			if (variation.indexOf("White riot") != -1)
+			if (variation.indexOf("Absence of dark") != -1)
 			{
 				$("body").addClass("white");
 			}
@@ -99,7 +136,7 @@
 				$("body").removeClass("white");
 			}
 
-			if (variation.indexOf("Black power") != -1)
+			if (variation.indexOf("Obsidious") != -1)
 			{
 				$("body").addClass("black");
 			}
@@ -108,7 +145,7 @@
 				$("body").removeClass("black");
 			}
 
-			if (variation.indexOf("Almost invisible") != -1)
+			if (variation.indexOf("Wallflower") != -1)
 			{
 				$("body").addClass("invisible");
 			}
@@ -117,7 +154,7 @@
 				$("body").removeClass("invisible");
 			}
 
-			if (variation.indexOf("Blowout") != -1)
+			if (variation.indexOf("Nightfall") != -1)
 			{
 				$("body").addClass("blowout");
 			}
@@ -126,13 +163,22 @@
 				$("body").removeClass("blowout");
 			}
 
-			if (variation.indexOf("Can you hear me Major Tom") != -1)
+			if (variation.indexOf("Oddity") != -1)
 			{
 				$("body").addClass("fadeaway");
 			}
 			else
 			{
 				$("body").removeClass("fadeaway");
+			}
+
+			if (variation.indexOf("Superfuzz Bigmuff") != -1)
+			{
+				$("body").addClass("fuzz");
+			}
+			else
+			{
+				$("body").removeClass("fuzz");
 			}
 
 		});
