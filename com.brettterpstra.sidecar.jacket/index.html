@@ -4,21 +4,21 @@
 		<meta name="jacket.title" content="Sidecar" />
 		<meta name="jacket.author" content="Brett Terpstra" />
 		<meta name="jacket.url" content="http://brettterpstra.com" />
-		<meta name="jacket.version" content="1.4" />
-		<meta name="jacket.bounds" content="300x1440" />
-		<meta name="jacket.variations" content="I have the blues so bad, It's not easy being green, White riot, Black power, Almost invisible" />
+		<meta name="jacket.version" content="1.5" />
+		<meta name="jacket.bounds" content="298x1418" />
+		<meta name="jacket.variations" content="I have the blues so bad, It's not easy being green, White riot, Black power, Almost invisible, Blowout, Can you hear me Major Tom?" />
 
 
 		<link rel="stylesheet" type="text/css" href="index.css"  />
 		<script type="text/javascript">
 
-		//Draws circle with specified radius
-
+		var timer;
 
 		//When user changes jacket to yours, or Simplify starts with your jacket this event arrives
 		Simplify.listenEvent(PMEvents.Ready, function(initial_state)
 		{
 			//This template jacket will fade in because of this line
+			$('#message').text("").removeClass("show");
 			$("body").animate({"opacity": ".85"},2000);
 
 			// if (Simplify.playerState() == PMPlayerState.Stopped)
@@ -37,6 +37,11 @@
 					Simplify.getTrackPlayedAmount(function(value)
 					{
 						$('.progress span').css({top:(Math.round(value*100/0.01)*0.01).toString() + "%"});
+						if ($('body').hasClass('blowout') || $('body').hasClass('fadeaway')) {
+							$('.progress span').css({'-webkit-filter': 'blur('+((value*105)+30)+'px)'});
+						} else {
+							$('.progress span').css({'-webkit-filter': 'blur(0)'});
+						}
 					});
 				}
 			}
@@ -56,6 +61,7 @@
 			//Activating application on double click
 			$("body, html").dblclick(function()
 			{
+				$('#message').text("").removeClass("show");
 				Simplify.nextTrack();
 			});
 
@@ -111,6 +117,24 @@
 				$("body").removeClass("invisible");
 			}
 
+			if (variation.indexOf("Blowout") != -1)
+			{
+				$("body").addClass("blowout");
+			}
+			else
+			{
+				$("body").removeClass("blowout");
+			}
+
+			if (variation.indexOf("Can you hear me Major Tom") != -1)
+			{
+				$("body").addClass("fadeaway");
+			}
+			else
+			{
+				$("body").removeClass("fadeaway");
+			}
+
 		});
 
 		//UI modifications on playback changes
@@ -118,15 +142,18 @@
 		{
 			if (state == PMPlayerState.Paused)
 			{
-				$('.progress').addClass('paused');
+				$('body').addClass('paused');
+				showMessage('paused');
 			}
 			else if (state == PMPlayerState.Playing)
 			{
-				$('.progress').removeClass('paused');
+				$('body').removeClass('paused');
+				showMessage('playing');
 			}
 			else
 			{
 				$('.progress').removeClass('paused');
+				$('#message').fadeOut();
 			}
 		});
 
@@ -163,14 +190,28 @@
 		//You can show controls over here, modify UI and so forth
 		Simplify.listenEvent(PMEvents.InactiveMouseEnter, function()
 		{
-			$("body").animate({"opacity": "1"},500);
+			$("body").stop().animate({"opacity": ".95"},500);
 		});
 
 		Simplify.listenEvent(PMEvents.InactiveMouseExit, function()
 		{
-			$("body").animate({"opacity": ".85"},500);
+			$("body").stop().animate({"opacity": ".85"},500);
 		});
 
+		function showMessage(msg) {
+			Simplify.getTrackPlayedAmount(function(value)
+			{
+				if (value > .001) {
+					$('#message').text('').removeClass('show');
+					clearTimeout(timer);
+					timer = null;
+					$('#message').text(msg).addClass('show');
+					timer = setTimeout(function(){
+						$('#message').text('').removeClass('show');
+					}, 1100);
+				}
+			});
+		}
 		</script>
 	</head>
 	<body>
@@ -180,5 +221,6 @@
 		<div class="jacket">
 			<p><strong class="artist"> </strong> <span class="title">I can haz beats?</span></p>
 		</div>
+		<span id="message">paused</span>
 	</body>
 </html>
