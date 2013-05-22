@@ -95,8 +95,8 @@ body
 	overflow: visible;
 	text-overflow: ellipsis;
 	position: absolute;
-	bottom:502px;
-	left:-316px;
+	bottom:490px;
+	left:-315px;
 	-webkit-transform: rotate(-90deg);
 	-webkit-transition: all .5s linear;
 }
@@ -156,9 +156,9 @@ body
 
 .green .progress span { background: rgba(114, 190, 119, .6); }
 
-.black .progress span { background: rgba(0, 0, 0, .8);    }
+.black .progress span { background: rgba(0, 0, 0, 1);    }
 .black .jacket .artist { background: rgba(255, 255, 255, .09); }
-.black { background: rgba(0, 0, 0, .6);  }
+.black { background: rgba(0, 0, 0, .8);  }
 
 .white .progress span { background: rgba(255, 255, 255, .6); }
 .white { background: rgba(255,255,255,.15); color: black; }
