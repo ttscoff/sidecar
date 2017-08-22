@@ -1,20 +1,21 @@
 <!DOCTYPE html>
 <html lang="en" xml:lang="en">
 	<head>
-		<meta name="jacket.uid" content="com.brettterpstra.sidecar" />
+		<title>Sidecar</title>
 		<meta name="jacket.title" content="Sidecar" />
 		<meta name="jacket.author" content="Brett Terpstra" />
 		<meta name="jacket.url" content="http://brettterpstra.com" />
-		<meta name="jacket.version" content="2.1" />
-		<meta name="jacket.bounds" content="298x1418 at 1418x0" />
+		<meta name="jacket.uid" content="com.brettterpstra.sidecar" />
+		<meta name="jacket.version" content="3.0" />
+		<meta name="jacket.bounds" content="298x1418 at 0x0" />
 		<meta name="jacket.variations" content="Snozzberry, Easy being green, Absence of dark, Obsidious, Wallflower, Nightfall, Oddity, Superfuzz Bigmuff" />
-		<meta name="jacket.options" content="" />
+		<meta name="jacket.options" content="no-dragging" />
 
 		<link rel="stylesheet" type="text/css" href="index.css"  />
 		<script type="text/javascript">
 
 		var timer;
-
+		var percentWidth = 0.31;
 		// test if current theme is blurred
 		// add new blurred themes to blurredThemes array as an array of class and foreground color
 		function isBlurred() {
@@ -36,10 +37,23 @@
 		Simplify.listen(Simplify.events.ready, function(initial_state)
 		{
 			var screensize = Simplify.getSystemScreenSize();
-			Simplify.setJacketFrame({"height" : screensize.height, "top" : 0, "left" : 0 });
+			Simplify.setJacketFrame({"width": screensize.width * percentWidth / 2, "height" : screensize.height, "bottom" : 0, "left" : 0 });
 			//This template jacket will fade in because of this line
 			$('#message').text("").removeClass("show");
-			$("body").animate({"opacity": ".85"},2000);
+			$("body").css({'width': screensize.width * percentWidth / 2}).animate({"opacity": ".85"},2000);
+			$('.jacket > p').css({
+				'width': '100vh',
+				'height': screensize.width * percentWidth / 2,
+				'left': '-152%',
+				'top' : '38%'
+			});
+			if (screensize.width > 1600) {
+				$('.jacket > p').css('fontSize', '40px');
+			} else if (screensize.width > 1000) {
+				$('.jacket > p').css('fontSize', '30px');
+			} else {
+				$('.jacket > p').css('fontSize', '20px');
+			}
 
 			// if (Simplify.playerState() == PMPlayerState.Stopped)
 			// {
@@ -49,7 +63,7 @@
 			// {
 			// 	$('.progress span').css({top:0});
 			// }
-			$('.progress span').css({top:"100%"});
+			$('.progress span').css({top:screensize.height});
 			var updateProgress = function()
 			{
 				if (Simplify.getPlayerState() == Simplify.playerState.isPlaying || Simplify.getPlayerState() == Simplify.playerState.isPaused)
@@ -83,7 +97,7 @@
 						}
 					});
 				}
-			}
+			};
 
 			updateProgress();
 			setInterval(updateProgress, 1000);
@@ -93,22 +107,25 @@
 				if (ev.metaKey) {
 					var percentage = (ev.pageY - $(this).offset().top)/$(this).height();
 					Simplify.setTrackSeeking(Simplify.getTrackLength() * percentage);
+				} else if (ev.shiftKey) {
+					$('#message').text("").removeClass("show");
+					Simplify.playbackNextTrack();
 				} else {
 					Simplify.playbackToggle();
 				}
 			});
 
 			//Activating application on double click
-			$("body, html").dblclick(function()
-			{
-				$('#message').text("").removeClass("show");
-				Simplify.playbackNextTrack();
-			});
+			// $(".jacket, body, html").dblclick(function()
+			// {
+			// 	$('#message').text("").removeClass("show");
+			// 	Simplify.playbackNextTrack();
+			// });
 
 		});
 
 		Simplify.listen(Simplify.events.newScreenResolution, function(new_res, old_res) {
-			Simplify.setJacketFrame({"height" : new_res.height, "bottom" : 0, "left" : 0 });s
+			Simplify.setJacketFrame({"height" : new_res.height, "bottom" : 0, "left" : 0 });
 		});
 
 		//When variation changes, you can add/remove CSS-classes from body to keep track current variation
@@ -188,6 +205,16 @@
 				$("body").removeClass("fuzz");
 			}
 
+			var screensize = Simplify.getSystemScreenSize();
+			Simplify.setJacketFrame({"width": screensize.width * percentWidth / 2, "height" : screensize.height, "bottom" : 0, "left" : 0 });
+			$("body").css({'width': screensize.width * percentWidth / 2});
+			$('.jacket > p').css({
+				'width': '100vh',
+				'height': screensize.width * percentWidth / 2,
+				'left': '-152%',
+				'top' : '38%'
+			});
+
 		});
 
 		//UI modifications on playback changes
@@ -217,12 +244,20 @@
 			if (artist != undefined && title != undefined)
 			{
 				$(".title,.artist").fadeOut('fast',function() {
+					var screensize = Simplify.getSystemScreenSize();
 					$(".title").text(title);
 					$(".artist").text(artist+" ");
-					$(this).fadeIn('fast');
-				})
 
-				$('.progress span').css({top:0});
+					$('.artist').css({
+						'width': 'auto'
+					});
+					$('.title').css({
+						'width': screensize.height - $('.artist').width()
+					});
+					$(this).fadeIn('fast');
+				});
+
+				$('.progress span').css({ 'top' : 0});
 			}
 			else
 			{
@@ -254,14 +289,14 @@
 		function showMessage(msg) {
 			Simplify.getTrackPlayedAmount(function(value)
 			{
-				if (value > .001) {
+				if (value > 0.001) {
 					$('#message').text('').removeClass('show');
 					clearTimeout(timer);
 					timer = null;
 					$('#message').text(msg).addClass('show');
 					timer = setTimeout(function(){
 						$('#message').text('').removeClass('show');
-					}, 1100);
+					}, 500);
 				}
 			});
 		}
@@ -274,6 +309,6 @@
 		<div class="jacket">
 			<p><strong class="artist"> </strong> <span class="title">I can haz beats?</span></p>
 		</div>
-		<span id="message">paused</span>
+		<span class="show" id="message">paused</span>
 	</body>
 </html>
