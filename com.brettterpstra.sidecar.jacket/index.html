@@ -115,6 +115,16 @@
 				}
 			});
 
+			$('.controls span').on('click', function(ev) {
+				if (ev.target.id === 'prev') {
+					Simplify.playbackPreviousTrack();
+				} else if (ev.target.id === 'playpause') {
+					Simplify.playbackToggle();
+				} else if (ev.target.id === 'next') {
+					Simplify.playbackNextTrack();
+				}
+			});
+
 			//Activating application on double click
 			// $(".jacket, body, html").dblclick(function()
 			// {
@@ -278,11 +288,13 @@
 		//You can show controls over here, modify UI and so forth
 		Simplify.listen(Simplify.events.backgroundMouseIn, function()
 		{
+			$("body").addClass('showcontrols');
 			$("body").stop().animate({"opacity": ".95"},500);
 		});
 
 		Simplify.listen(Simplify.events.backgroundMouseOut, function()
 		{
+			$("body").removeClass('showcontrols');
 			$("body").stop().animate({"opacity": ".85"},500);
 		});
 
@@ -303,6 +315,11 @@
 		</script>
 	</head>
 	<body>
+		<div class="controls">
+			<span id="prev">&lt;</span>
+			<span id="playpause">||</span>
+			<span id="next">&gt;</span>
+		</div>
 		<div class="progress">
 			<span></span>
 		</div>

@@ -20,11 +20,44 @@ body {
 
 body
 {
-	opacity: 1; /* FIX set back to 0 */
+	opacity: 0;
 	color: #fff;
+	overflow: hidden;
 }
 
 /* Your properties below */
+
+.controls
+{
+	position: fixed;
+	top: 0;
+	z-index: 100000;
+	width: 100%;
+	height: 60px;
+	background: rgba(0,0,0,.2);
+	transition: all linear .5s;
+	opacity: 0;
+}
+
+.showcontrols .controls
+/*.controls*/
+{
+	opacity: 1;
+	transition: all linear .5s;
+	border-bottom: solid 1px rgba(255,255,255,.4);
+}
+
+.controls span {
+	display: block;
+	height: 100%;
+	float: left;
+	font-weight: 700;
+	line-height:3.5;
+	font-size: 24px;
+	width: 33%;
+	text-align: center;
+	color: rgba(255,255,255,.4);
+}
 
 .progress
 {
@@ -33,11 +66,19 @@ body
 	width: 100%;
 	height: 100%;
 	position: absolute;
-	left: 0;
+	left: -1px;
 	bottom: 0;
 	right: 0;
 	top: 0;
-	z-index: 0; /* FIX set back to 0 */
+	z-index: 0;
+}
+
+.paused .jacket,
+.paused .progress,
+.paused .artist,
+.paused .title {
+/*	opacity: .5;
+	transition: all linear 1s;*/
 }
 
 .progress span
@@ -173,13 +214,14 @@ body
 .white .jacket > p { color: rgba(0,0,0,.5); }
 
 .invisible { background: rgba(0,0,0,.1); }
-.invisible .progress span { background: rgba(0,0,0,.1);}
+.invisible .progress span { background: rgba(0,0,0,.1); color: #fff;}
+.invisible .jacket .title { font-weight: 300; }
 .invisible .jacket .artist { background: rgba(0,0,0,.1); }
 .invisible .jacket > p { color: rgba(255,255,255,.3); }
 
 .blowout {
 	background-color: #000000;
-	background: -webkit-linear-gradient(top, rgb(0, 0, 0), rgb(65, 8, 76));
+	background: -webkit-linear-gradient(top, rgb(0, 0, 0) 0%, rgb(0, 0, 0) 70%, rgba(150, 52, 24, 1.00) 100%);
 	/*background-image: -webkit-gradient(linear, left top, left bottom, from(rgb(197, 13, 124)), to(rgb(23, 0, 14)));*/
 }
 .blowout .progress span {
